@@ -120,3 +120,11 @@ System Index (RecId - DataAreaId)
 Microsoft Dynamics AX requires a unique index on each table so if there are no indexes on a table or all the indexes are disabled, a system index is automatically created. The system index is created on the RecId and DataAreaId fields if the DataAreaId field exists. Otherwise the system index is created on the RecId field. 
 
 If there are indexes on a table but none of them are unique, the runtime estimates the average key length of the existing indexes, chooses the index with the smallest key length and appends the RecId column to create a unique index.
+
+
+
+
+Sources
+https://docs.microsoft.com/en-us/dynamicsax-2012/developer/indexes-overview
+https://mindmajix.com/
+https://docs.microsoft.com/en-us/dynamicsax-2012/appuser-itpro/deprecated-x-index-hint-clause
