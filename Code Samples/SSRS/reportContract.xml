@@ -30,10 +30,10 @@
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>parmStartAccount</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+	<Name>parmStartAccount</Name>
+	<Source><![CDATA[
     [DataMemberAttribute("StartAccount")]
     public CustAccount parmStartAccount(CustAccount _CustAccount = StartAccount)
     {
@@ -43,10 +43,10 @@
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>parmEndDate</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+	<Name>parmEndDate</Name>
+	<Source><![CDATA[
     [DataMemberAttribute("EndDate")]
     public EndDate parmEndDate(EndDate _endDate = endDate)
     {
@@ -56,10 +56,10 @@
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>parmStartDate</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+	<Name>parmStartDate</Name>
+	<Source><![CDATA[
     [DataMemberAttribute("StartDate")]
     public StartDate parmStartDate(StartDate _startDate = startDate)
     {
@@ -69,10 +69,10 @@
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>parmEndPostingProfile</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+	<Name>parmEndPostingProfile</Name>
+	<Source><![CDATA[
     [DataMemberAttribute("EndPostingProfile")]
     public PostingProfile parmEndPostingProfile(PostingProfile _endPostingProfile = endPostingProfile)
     {
@@ -82,10 +82,10 @@
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>parmStartPostingProfile</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+	<Name>parmStartPostingProfile</Name>
+	<Source><![CDATA[
     [DataMemberAttribute("StartPostingProfile")]
     public PostingProfile parmStartPostingProfile(PostingProfile _startPostingProfile = startPostingProfile)
     {
@@ -95,8 +95,8 @@
     }
 
 ]]></Source>
-			</Method>
-			
-		</Methods>
-	</SourceCode>
+</Method>
+
+</Methods>
+</SourceCode>
 </AxClass>
