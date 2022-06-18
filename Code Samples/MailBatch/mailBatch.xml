@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<Name>yourBatch</Name>
+<SourceCode>
+<Declaration><![CDATA[
+class yourBatch extends RunBaseBatch
+{
+    // Packed variables
+    TransDate       transDate;
+    CustAccount     custAccount;
+    
+    str                             tableName;
+    boolean                         isSent;
+    boolean                         hasTransfer = false;
+    SMAParameters                   param;
+    SmaAgreementLine                agreementLine;
+    SmaAgreementTable               agreementTable;
+    SmaServiceOrderLine             serviceOrderLine;
+    SmaServiceOrderTable            serviceOrderTable;
+    
+    container                       conToEmail,conCCMail;
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        transDate,
+        custAccount
+    #endmacro
+    
+
+}
+]]></Declaration>
+<Methods>
+<Method>
+<Name>createEmailBodyNext</Name>
+<Source><![CDATA[
+    str createEmailBodyNext(str _date, str _agreementDesc)
+    {
+        str     mailBody;
+        
+        mailBody = "..., <br/> <br/>";
+        mailBody += CompanyInfo::find().Name;
+
+        return mailBody;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>getMailList</Name>
+<Source><![CDATA[
+    void getMailList()
+    {
+        mailTable   mailTable;
+
+        while select mailTable
+            where mailTable.realEstateAccount == _realEstateAcc
+        {
+            if(conFind(conToEmail,mailTable.Email) == 0)
+            {
+                if(mailTable.ReceiverType == MailReceiverType::To)
+                    conToEmail  += [mailTable.Email];
+                else
+                    conCCMail   += [mailTable.Email];
+            }
+        }
+
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>proccessNext</Name>
+<Source><![CDATA[
+    void proccess(TransDate _dt)
+    {
+        while select yourTable
+        {
+            str dt =date2Str(agreementLine.StartDate,123,
+                                    DateDay::Digits2,
+                                    DateSeparator::Slash,
+                                    DateMonth::Digits2,
+                                    DateSeparator::Slash,DateYear::Digits4 );
+            
+            str mailBody = this.createEmailBodyNext(dt,"");
+            this.getMailList();
+            this.sendMail(mailBody, "");
+            sleep(1000);
+           
+        }
+
+    }
+
+]]></Source>
+</Method>
+
+<Method>
+<Name>run</Name>
+<Source><![CDATA[
+    public void run()
+    {
+        #OCCRetryCount
+        if (! this.validate())
+            throw error("");
+
+        try
+        {
+            str                 mailBody;
+            
+            param               = SMAParameters::find();
+            utcdatetime         utcToday    = DateTimeUtil::newDateTime(today(),timeNow());
+            
+			this.proccessNext(startDate);
+            
+            
+        }
+        catch (Exception::Deadlock)
+        {
+            retry;
+        }
+        catch (Exception::UpdateConflict)
+        {
+            if (appl.ttsLevel() == 0)
+            {
+                if (xSession::currentRetryCount() >= #RetryNum)
+                {
+                    throw Exception::UpdateConflictNotRecovered;
+                }
+                else
+                {
+                    retry;
+                }
+            }
+            else
+            {
+                throw Exception::UpdateConflict;
+            }
+        }
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>sendMail</Name>
+<Source><![CDATA[
+    void sendMail(str _messageBody, str _subject)
+    {
+        SMTPUserName userName;
+        SMTPPassword password;
+        SMTPPortNumber          portNumber;
+        SMTPRelayServerName     relayServer;
+
+        SysEmailParameters      parameters = SysEmailParameters::find();
+
+        InteropPermission interopPermission;
+        emailHelper mailer;
+        System.Exception e;
+        /*
+        if(parameters.SMTPRelayServerName)
+        {
+            relayServer = parameters.SMTPRelayServerName;
+        }
+        
+        portNumber = parameters.SMTPPortNumber;
+        userName = parameters.SMTPUserName;
+*/
+        CodeAccessPermission::revertAssert();
+        isSent  = false;
+        try
+        {
+            if(conLen(conToEmail)>0)
+            {
+                interopPermission = new InteropPermission(InteropKind::ComInterop);
+                interopPermission.assert();
+            
+                mailer = new EmailHelper();
+
+                mailer.setEmailCC(conCCMail);
+                mailer.sendMail(conToEmail, _subject, _messageBody, "info@yourCompany.onmicrosoft.com");
+
+                CodeAccessPermission::revertAssert();
+
+                info("Mail Gönderildi!");
+                isSent = true;
+            }
+        }
+        catch (Exception::CLRError)
+        {
+            isSent = false;
+            e = ClrInterop::getLastException();
+    
+            while (e)
+            {
+                info(e.get_Message());
+                e = e.get_InnerException();
+            }
+            
+            CodeAccessPermission::revertAssert();
+
+            info ("Failed to Send Email some Error occure");
+        }
+
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>construct</Name>
+<Source><![CDATA[
+    static yourBatch construct()
+    {
+        return new yourBatch();
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>main</Name>
+<Source><![CDATA[
+    static void main(Args args)
+    {
+        yourBatch    batch;
+        ;
+        batch = yourBatch::construct();
+
+        if (batch.prompt())
+            batch.runOperation();
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>description</Name>
+<Source><![CDATA[
+    // Here goes a description of the class
+    static ClassDescription description()
+    {
+        return "batch description";
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>canGoBatchJournal</Name>
+<Source><![CDATA[
+    public boolean canGoBatchJournal()
+    {
+        return true;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>init</Name>
+<Source><![CDATA[
+    public boolean init()
+    {
+        return true;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>new</Name>
+<Source><![CDATA[
+    protected void new()
+    {
+        super();
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>pack</Name>
+<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion,#CurrentList];
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>runsImpersonated</Name>
+<Source><![CDATA[
+    public boolean runsImpersonated()
+    {
+        return true;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>unpack</Name>
+<Source><![CDATA[
+    public boolean unpack(container packedClass)
+    {
+        Version version = RunBase::getVersion(packedClass);
+        ;
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version,#CurrentList] = packedClass;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>validate</Name>
+<Source><![CDATA[
+    public boolean validate(Object _calledFrom = null)
+    {
+        if (false)
+            return checkFailed("");
+
+        return true;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>canRunInNewSession</Name>
+<Source><![CDATA[
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+</Method>
+</Methods>
+</SourceCode>
+</AxClass>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<Name>EmailHelper</Name>
+<SourceCode>
+<Declaration><![CDATA[
+class EmailHelper
+{
+    SysMailerMessageBuilder mailer;
+    container       attachFile, emailCC;
+
+}
+]]></Declaration>
+<Methods>
+<Method>
+<Name>sendMail</Name>
+<Source><![CDATA[
+    public void sendMail(container  emailTo,
+                         str        emailSubject,
+                         str        emailBody,
+                         str        emailFrom = SysEmailParameters::find().SMTPUserName)
+    {
+        SysEmailParameters  param;
+        #define.EmailBodyCharset('utf-8')
+        ;
+        
+        if (emailTo
+         || emailSubject
+         || emailBody)
+        {
+            param = SysEmailParameters::find();
+
+            str userName = any2Str(param.SMTPUserName);
+
+            emailFrom = emailFrom ? emailFrom : userName ;
+            mailer = new SysMailerMessageBuilder();
+    
+            mailer.setSubject(emailSubject);
+            mailer.setBody(emailBody,true);
+            mailer.setFrom(emailFrom);
+    
+            this.addEmailTo(emailTo);
+            this.addEmailCC();
+            this.addAttachFile();
+    
+            SysMailerFactory::sendNonInteractive(mailer.getMessage());
+        }
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>addAttachFile</Name>
+<Source><![CDATA[
+    private void addAttachFile()
+    {
+        int       i;
+        str       fileName;
+        ;
+    
+        if (attachFile != conNull())
+        {
+            for (i=1; i <= conLen(attachFile); i++)
+            {
+                fileName = conPeek(attachFile, i);
+                fileName = @this.trim(fileName);
+    
+                if (fileName
+                    && System.IO.File::Exists(fileName))
+                {
+                    mailer.addAttachmentFromFile(fileName);
+                }
+                else
+                {
+                    warning("Dosya bulunamadı: " + fileName);
+                }
+            }
+        }
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>addEmailCC</Name>
+<Source><![CDATA[
+    private void addEmailCC()
+    {
+        int         i;
+        str         currentEmail;
+        ;
+    
+        if (emailCC != conNull())
+        {
+            for (i=1; i <= conLen(emailCC); i++)
+            {
+                currentEmail = this.trim(conPeek(emailCC, i));
+
+                if (currentEmail)
+                {
+                    mailer.addCc(currentEmail);
+                }
+            }
+        }
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>addEmailTo</Name>
+<Source><![CDATA[
+    private void addEmailTo(container emailTo)
+    {
+        int         i;
+        str         currentEmail;
+        ;
+    
+        if (emailTo != conNull())
+        {
+            for (i=1; i <= conLen(emailTo); i++)
+            {
+                currentEmail = this.trim(conPeek(emailTo, i));
+                
+                if (currentEmail)
+                {
+                    mailer.addTo(currentEmail);
+                }
+            }
+        }
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>trim</Name>
+<Source><![CDATA[
+    private str trim(str _val)
+    {
+        return strLTrim(strRTrim(_val));
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>setAttachFile</Name>
+<Source><![CDATA[
+    public void setAttachFile(container _attachFile)
+    {
+        attachFile = _attachFile;
+    }
+
+]]></Source>
+</Method>
+<Method>
+<Name>setEmailCC</Name>
+<Source><![CDATA[
+    public void setEmailCC(container _emailCC)
+    {
+        emailCC = _emailCC;
+    }
+
+]]></Source>
+</Method>
+</Methods>
+</SourceCode>
+</AxClass>
