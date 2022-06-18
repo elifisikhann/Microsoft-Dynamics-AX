@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>yourDP</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[SRSReportParameterAttribute(classstr(yourContract))]
+public class yourDP extends SrsReportDataProviderPreProcess
+{
+
+    yourContract     	contract;
+    yourTmp          	yourTmp;
+    yourBalanceTmp      balanceTmp;
+    StartDate           sDate;
+    EndDate             eDate;    
+
+    int opening;
+    int operating;
+    int closing;
+
+    str 20 openingText;
+    str 20 closingText;
+
+   
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getYourTmp</Name>
+				<Source><![CDATA[
+    [SRSReportDataSetAttribute(tableStr("yourTmp"))]
+    public yourTmp getYourTmp()
+    {
+        select * from yourTmp;
+        return yourTmp;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getYourBalanceTmp</Name>
+				<Source><![CDATA[
+    [SRSReportDataSetAttribute(tableStr("yourBalanceTmp"))]
+    public yourBalanceTmp getYourBalanceTmp()
+    {
+        select * from balanceTmp;
+        return balanceTmp;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processReport</Name>
+				<Source><![CDATA[
+    [SysEntryPointAttribute(false)]
+    public void processReport()
+    {             
+        boolean     flag = true;
+        yourTmp.setConnection(this.parmUserConnection());
+        balanceTmp.setConnection(this.parmUserConnection());
+        contract = this.parmDataContract();
+        sDate = contract.parmStartDate();
+        eDate = contract.parmEndDate();
+        
+		this.initDefaultValue();
+
+        this.createData();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createData</Name>
+				<Source><![CDATA[
+    public void createData()
+    {        
+		//fill data
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initDefaultValue</Name>
+				<Source><![CDATA[
+    public void initDefaultValue()
+    {
+        contract    = this.parmDataContract() as yourContract;
+
+        opening     = 1;
+        operating   = 2;
+        closing     = 3;
+
+        openingText  = "@SYS22797";
+        closingText  = "@SYS22796";
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

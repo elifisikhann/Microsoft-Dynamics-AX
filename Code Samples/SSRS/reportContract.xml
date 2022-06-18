@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>yourContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[    DataContractAttribute, SysOperationContractProcessingAttribute(classstr(yourUIBuilder))    ]
+    public class yourContract
+{
+    StartDate                   startDate;
+    EndDate                     endDate;
+    Name                        Name;
+    boolean                     groupByPostingProfile;
+
+    CustAccount                 StartAccount;
+    CustAccount                 EndAccount;
+    PostingProfile              StartPostingProfile;
+    PostingProfile              EndPostingProfile;
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmEndAccount</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("EndAccount")]
+    public CustAccount parmEndAccount(CustAccount _CustAccount = EndAccount)
+    {
+        EndAccount = _CustAccount;
+
+        return EndAccount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStartAccount</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("StartAccount")]
+    public CustAccount parmStartAccount(CustAccount _CustAccount = StartAccount)
+    {
+        StartAccount = _CustAccount;
+
+        return StartAccount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmEndDate</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("EndDate")]
+    public EndDate parmEndDate(EndDate _endDate = endDate)
+    {
+        endDate = _endDate;
+
+        return endDate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStartDate</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("StartDate")]
+    public StartDate parmStartDate(StartDate _startDate = startDate)
+    {
+        startDate = _startDate;
+
+        return startDate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmEndPostingProfile</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("EndPostingProfile")]
+    public PostingProfile parmEndPostingProfile(PostingProfile _endPostingProfile = endPostingProfile)
+    {
+        endPostingProfile = _endPostingProfile;
+
+        return endPostingProfile;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStartPostingProfile</Name>
+				<Source><![CDATA[
+    [DataMemberAttribute("StartPostingProfile")]
+    public PostingProfile parmStartPostingProfile(PostingProfile _startPostingProfile = startPostingProfile)
+    {
+        startPostingProfile = _startPostingProfile;
+
+        return startPostingProfile;
+    }
+
+]]></Source>
+			</Method>
+			
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>yourUIBuilder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+class yourUIBuilder extends SrsReportDataContractUIBuilder
+{
+    yourContract contract;
+
+    DialogField dlgStartPostingProfile;
+    DialogField dlgEndPostingProfile;
+
+    DialogField dlgStartAccount;
+    DialogField dlgEndAccount;
+
+    DialogField dlgName;
+
+    DialogField dlgDimensionAttribute;
+
+    DialogField dlgProfitCenter;
+    DialogField dlgBrand;
+    DialogField dlgInvoiceTypeId;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>build</Name>
+				<Source><![CDATA[
+    public void build()
+    {
+        DialogGroup grp;
+        Dialog      dialogLocal = this.dialog();
+        ;
+        contract = this.dataContractObject() as yourContract;
+
+        grp = dialogLocal.addGroup("Müşteri Hesabı");
+
+        dlgStartAccount = this.addDialogField(methodStr(yourContract,parmStartAccount), contract);
+        dlgStartAccount.label("Başlangıç");
+        dlgEndAccount = this.addDialogField(methodStr(yourContract,parmEndAccount), contract);
+        dlgEndAccount.label("Bitiş");
+        grp.frameType(FormFrameType::Auto);
+        grp.columns(1);
+
+        grp = dialogLocal.addGroup("Tarih Aralığı");
+
+        this.addDialogField(methodStr(yourContract,parmStartDate), contract);
+        this.addDialogField(methodStr(yourContract,parmEndDate), contract);
+        grp.frameType(FormFrameType::Auto);
+        grp.columns(1);
+
+        grp = dialogLocal.addGroup("Deftere Nakil Profili");
+
+        dlgStartPostingProfile = this.addDialogField(methodStr(yourContract,parmStartPostingProfile), contract);
+        dlgStartPostingProfile.label("Başlangıç");
+        dlgEndPostingProfile = this.addDialogField(methodStr(yourContract,parmEndPostingProfile), contract);
+        dlgEndPostingProfile.label("Bitiş");
+        grp.frameType(FormFrameType::Auto);
+        grp.columns(1);
+
+        grp = dialogLocal.addGroup("Boyut");
+
+        dlgProfitCenter = this.addDialogField(methodStr(yourContract,parmEstateAccount), contract);
+        dlgProfitCenter.label("Kar Merkezi");
+        
+        grp.frameType(FormFrameType::Auto);
+        grp.columns(1);
+
+       
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>lookupCustLedger</Name>
+				<Source><![CDATA[
+    public void lookupCustLedger(FormStringControl _FormStringControl )
+    {
+        CustLedger::lookupPostingProfile(_FormStringControl,"","");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>lookupProfitCenter</Name>
+				<Source><![CDATA[
+    public void lookupProfitCenter(FormStringControl _FormStringControl )
+    {
+        SysTableLookup          sysTableLookup = SysTableLookup::newParameters(tableNum(lookupTbl), _FormStringControl);
+        Query                   query = new Query();
+        QueryBuildDataSource    qbds = query.addDataSource(tableNum(lookupTbl));
+        ;
+        sysTableLookup.addLookupfield(fieldNum(lookupTbl, field1));
+        sysTableLookup.addLookupfield(fieldNum(lookupTbl, field2));
+        
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    public void postRun()
+    {
+        super();
+        dlgStartPostingProfile.registerOverrideMethod(methodstr(FormStringControl, lookup), methodstr(yourUIBuilder, lookupCustLedger), this);
+        dlgEndPostingProfile.registerOverrideMethod(methodstr(FormStringControl, lookup), methodstr(yourUIBuilder, lookupCustLedger), this);
+        dlgProfitCenter.registerOverrideMethod(methodstr(FormStringControl, lookup), methodstr(yourUIBuilder, lookupProfitCenter), this);
+        dlgBrand.registerOverrideMethod(methodstr(FormStringControl, lookup), methodstr(yourUIBuilder, lookupBrand), this);
+        dlgInvoiceTypeId.registerOverrideMethod(methodstr(FormStringControl, lookup), methodstr(yourUIBuilder, lookupInvoiceTypeId), this);
+
+        dlgStartPostingProfile.registerOverrideMethod(methodstr(FormStringControl, modified), methodstr(yourUIBuilder, startPostingProfileModified), this);
+        dlgStartAccount.registerOverrideMethod(methodstr(FormStringControl, modified), methodstr(yourUIBuilder, startAccountModified), this);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>startAccountModified</Name>
+				<Source><![CDATA[
+    public boolean startAccountModified(FormStringControl _control)
+    {
+        boolean             isModified;
+
+        isModified = _control.modified();
+        if (isModified)
+        {
+            dlgEndAccount.value(dlgStartAccount.value());
+        }
+
+        return isModified;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>startPostingProfileModified</Name>
+				<Source><![CDATA[
+    public boolean startPostingProfileModified(FormStringControl _control)
+    {
+        boolean             isModified;
+
+        isModified = _control.modified();
+        if (isModified)
+        {
+            dlgEndPostingProfile.value(dlgStartPostingProfile.value());
+        }
+
+        return isModified;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

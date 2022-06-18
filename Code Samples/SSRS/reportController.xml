@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>yourController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+class yourController extends SrsReportRunController
+{   
+}
+]]>
+</Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    static void main(Args _args)
+    {             
+        yourController   controller = new yourController();
+        yourContract     contract   = new yourContract();
+        ;
+		
+        controller.parmArgs(_args);
+        controller.parmReportName(ssrsReportStr(yourReport,Report));
+        controller.parmDialogCaption("Report Caption");
+        controller.parmShowDialog(true);
+        controller.showQueryValues("");
+        controller.startOperation();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
