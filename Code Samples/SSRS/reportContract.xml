@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>yourContract</Name>
-	<SourceCode>
-		<Declaration><![CDATA[
+<Name>yourContract</Name>
+<SourceCode>
+<Declaration><![CDATA[
 [    DataContractAttribute, SysOperationContractProcessingAttribute(classstr(yourUIBuilder))    ]
     public class yourContract
 {
@@ -17,10 +17,10 @@
     PostingProfile              EndPostingProfile;
 }
 ]]></Declaration>
-		<Methods>
-			<Method>
-				<Name>parmEndAccount</Name>
-				<Source><![CDATA[
+<Methods>
+<Method>
+<Name>parmEndAccount</Name>
+<Source><![CDATA[
     [DataMemberAttribute("EndAccount")]
     public CustAccount parmEndAccount(CustAccount _CustAccount = EndAccount)
     {
@@ -32,8 +32,8 @@
 ]]></Source>
 </Method>
 <Method>
-	<Name>parmStartAccount</Name>
-	<Source><![CDATA[
+<Name>parmStartAccount</Name>
+<Source><![CDATA[
     [DataMemberAttribute("StartAccount")]
     public CustAccount parmStartAccount(CustAccount _CustAccount = StartAccount)
     {
@@ -45,8 +45,8 @@
 ]]></Source>
 </Method>
 <Method>
-	<Name>parmEndDate</Name>
-	<Source><![CDATA[
+<Name>parmEndDate</Name>
+<Source><![CDATA[
     [DataMemberAttribute("EndDate")]
     public EndDate parmEndDate(EndDate _endDate = endDate)
     {
@@ -58,8 +58,8 @@
 ]]></Source>
 </Method>
 <Method>
-	<Name>parmStartDate</Name>
-	<Source><![CDATA[
+<Name>parmStartDate</Name>
+<Source><![CDATA[
     [DataMemberAttribute("StartDate")]
     public StartDate parmStartDate(StartDate _startDate = startDate)
     {
@@ -71,8 +71,8 @@
 ]]></Source>
 </Method>
 <Method>
-	<Name>parmEndPostingProfile</Name>
-	<Source><![CDATA[
+<Name>parmEndPostingProfile</Name>
+<Source><![CDATA[
     [DataMemberAttribute("EndPostingProfile")]
     public PostingProfile parmEndPostingProfile(PostingProfile _endPostingProfile = endPostingProfile)
     {
@@ -84,8 +84,8 @@
 ]]></Source>
 </Method>
 <Method>
-	<Name>parmStartPostingProfile</Name>
-	<Source><![CDATA[
+<Name>parmStartPostingProfile</Name>
+<Source><![CDATA[
     [DataMemberAttribute("StartPostingProfile")]
     public PostingProfile parmStartPostingProfile(PostingProfile _startPostingProfile = startPostingProfile)
     {
