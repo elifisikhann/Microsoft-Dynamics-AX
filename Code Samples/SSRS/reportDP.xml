@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>yourDP</Name>
-	<SourceCode>
-		<Declaration><![CDATA[
+<Name>yourDP</Name>
+<SourceCode>
+<Declaration><![CDATA[
 [SRSReportParameterAttribute(classstr(yourContract))]
 public class yourDP extends SrsReportDataProviderPreProcess
 {
@@ -23,10 +23,10 @@ public class yourDP extends SrsReportDataProviderPreProcess
    
 }
 ]]></Declaration>
-		<Methods>
-			<Method>
-				<Name>getYourTmp</Name>
-				<Source><![CDATA[
+<Methods>
+<Method>
+<Name>getYourTmp</Name>
+<Source><![CDATA[
     [SRSReportDataSetAttribute(tableStr("yourTmp"))]
     public yourTmp getYourTmp()
     {
@@ -35,10 +35,10 @@ public class yourDP extends SrsReportDataProviderPreProcess
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>getYourBalanceTmp</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+<Name>getYourBalanceTmp</Name>
+<Source><![CDATA[
     [SRSReportDataSetAttribute(tableStr("yourBalanceTmp"))]
     public yourBalanceTmp getYourBalanceTmp()
     {
@@ -47,10 +47,10 @@ public class yourDP extends SrsReportDataProviderPreProcess
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>processReport</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+<Name>processReport</Name>
+<Source><![CDATA[
     [SysEntryPointAttribute(false)]
     public void processReport()
     {             
@@ -67,20 +67,20 @@ public class yourDP extends SrsReportDataProviderPreProcess
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>createData</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+<Name>createData</Name>
+<Source><![CDATA[
     public void createData()
     {        
 		//fill data
     }
 
 ]]></Source>
-			</Method>
-			<Method>
-				<Name>initDefaultValue</Name>
-				<Source><![CDATA[
+</Method>
+<Method>
+<Name>initDefaultValue</Name>
+<Source><![CDATA[
     public void initDefaultValue()
     {
         contract    = this.parmDataContract() as yourContract;
@@ -95,7 +95,7 @@ public class yourDP extends SrsReportDataProviderPreProcess
     }
 
 ]]></Source>
-			</Method>
-		</Methods>
-	</SourceCode>
+</Method>
+</Methods>
+</SourceCode>
 </AxClass>
